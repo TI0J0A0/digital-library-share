@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: biblio
+      POSTGRES_USER: seu_usuario
+      POSTGRES_PASSWORD: sua_senha
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/biblio
+      SPRING_DATASOURCE_USERNAME: seu_usuario
+      SPRING_DATASOURCE_PASSWORD: sua_senha
+      JWT_SECRET: sua_chave_secreta
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+
+volumes:
+  db_data:
